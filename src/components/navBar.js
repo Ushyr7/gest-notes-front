@@ -54,8 +54,8 @@ export default class NavBar extends Component {
             return (
             <nav>
                 <div class="nav-wrapper teal lighten-2">
-                    <a href="http://localhost:3000/homeetu" class="brand-logo">Accueil</a>
-                    <a href="http://localhost:3000/" onClick={this.handleLogout} class="right"> Se déconnecter</a>
+                    <a href="https://gest-notes-m1-gil.netlify.app/homeetu" class="brand-logo">Accueil</a>
+                    <a href="https://gest-notes-m1-gil.netlify.app/" onClick={this.handleLogout} class="right"> Se déconnecter</a>
                     <ul id="nav-mobile" class="left hide-on-med-and-down">
                     </ul>
                 </div>

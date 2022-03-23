@@ -18,8 +18,8 @@ export default class NavBar extends Component {
                 return (
                     <nav>
                         <div class="nav-wrapper teal lighten-2">
-                            <a href="http://localhost:3000/homeetu" class="brand-logo">Accueil</a>
-                            <a href="http://localhost:3000/" onClick={this.handleLogout} class="right"> Se déconnecter</a>
+                            <a href="https://gest-notes-m1-gil.netlify.app/homeetu" class="brand-logo">Accueil</a>
+                            <a href="https://gest-notes-m1-gil.netlify.app/" onClick={this.handleLogout} class="right"> Se déconnecter</a>
                             <ul id="nav-mobile" class="left hide-on-med-and-down">
                             </ul>
                         </div>
@@ -30,8 +30,8 @@ export default class NavBar extends Component {
                 return (
                     <nav>
                         <div class="nav-wrapper teal lighten-2">
-                            <a href="http://localhost:3000/homeEns" class="brand-logo">Accueil</a>
-                            <a href="http://localhost:3000/" onClick={this.handleLogout} class="right"> Se déconnecter</a>
+                            <a href="https://gest-notes-m1-gil.netlify.app/homeEns" class="brand-logo">Accueil</a>
+                            <a href="https://gest-notes-m1-gil.netlify.app/" onClick={this.handleLogout} class="right"> Se déconnecter</a>
                             <ul id="nav-mobile" class="left hide-on-med-and-down">
                             </ul>
 
@@ -43,8 +43,8 @@ export default class NavBar extends Component {
                 return (
                     <nav>
                         <div class="nav-wrapper teal lighten-2">
-                            <a href="http://localhost:3000/homeAdmin" class="brand-logo">Accueil</a>
-                            <a href="http://localhost:3000/admin" onClick={this.handleLogout} class="right"> Se déconnecter</a>
+                            <a href="https://gest-notes-m1-gil.netlify.app/homeAdmin" class="brand-logo">Accueil</a>
+                            <a href="https://gest-notes-m1-gil.netlify.app/admin" onClick={this.handleLogout} class="right"> Se déconnecter</a>
                             <ul id="nav-mobile" class="left hide-on-med-and-down">
                             </ul>
                         </div>
@@ -65,7 +65,7 @@ export default class NavBar extends Component {
             return (
                 <nav>
                     <div class="nav-wrapper teal lighten-2">
-                        <a href="http://localhost:3000/" class="brand-logo">Accueil</a>
+                        <a href="https://gest-notes-m1-gil.netlify.app/" class="brand-logo">Accueil</a>
                         <ul id="nav-mobile" class="left hide-on-med-and-down">
                         </ul>
                     </div>

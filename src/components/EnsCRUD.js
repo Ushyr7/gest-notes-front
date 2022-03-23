@@ -1,0 +1,239 @@
+import React,{ useState, useEffect } from "react";
+import axios from "axios";
+import { Navigate } from 'react-router-dom';
+
+
+
+const EnsCRUD =() => {
+    const[dataList, setDataList] = useState([]);
+
+    const[numEns, setNumEns] = useState("");
+    const[idEns, setIdEns] = useState("");
+    const[nomEns, setNomEns] = useState("");
+    const[prenomEns, setPrenomEns] = useState("");
+    const[motDePasse, setMotDePasse] = useState("");
+    const[estPresidentJury, setEstPresidentJury] = useState("");
+    const[method,setMethod] = useState("");
+
+    const openExitAddEns = () => {
+        document.querySelector('.cover-all').classList.toggle('show');
+    
+        //état par défaut des forms
+        document.querySelector("#editForm").style.display = "none";
+        document.querySelector("#addForm").style.display = "block";
+
+        setNumEns("");
+        setIdEns("");
+        setNomEns("");
+        setPrenomEns("");
+        setMotDePasse("");
+        setEstPresidentJury(0);
+        setMethod("Ajouter");
+
+    }
+
+
+
+    const handleSubmitAddEtud =  type => async(e) => {
+        e.preventDefault();
+
+        const data = {
+             id: idEns,
+             mdp: motDePasse,
+             nom: nomEns,
+             prenom: prenomEns,
+             num: numEns,
+             estPresidentJury: parseInt(estPresidentJury,10)
+        }
+        console.log(data);
+        const options = {
+            headers: {"content-type": "application/json"}
+        }
+
+        if(type === "add") {
+            axios.post('api/ens',data,options)
+            .then(res=> {
+                console.log('succes');  
+                alert("Enseignant ajoutée avec succés");
+                document.location.reload();
+            });
+        } else {
+            axios.put('api/ens',data,options)
+            .then(res=> {
+                console.log('succes');  
+                alert("Enseignant modifié avec succés");
+                document.location.reload();
+            });
+        }
+    };
+
+    //supprimer un Enseignant  
+    const deleteEns =  async(e) => {
+        e.preventDefault();
+
+        const data = {
+                id: idEns,
+        }
+        console.log(data);
+        const options = {
+            headers: {"content-type": "application/json"}
+        }
+        axios.post('api/ens/del',data,options)
+        .then(res=> {
+            console.log('succes');  
+            alert("Enseignant supprimer avec succés");
+            document.location.reload();
+
+        });
+    };
+
+    const openEditEns = (e) => {
+        e.preventDefault();
+
+        axios.get('api/ens/all').then(res=> {
+            const result = res.data.filter(v => v.idEnseignant === idEns);
+            console.log(res.data);
+            //obtenir les information de l'université 
+            setNumEns(result[0].numEns);
+            setIdEns(result[0].idEnseignant);
+            setNomEns(result[0].nomEns);
+            setPrenomEns(result[0].prenomEns);
+            setMotDePasse(result[0].motDePasse);
+            setEstPresidentJury(result[0].estPresidentJury);
+            setMethod("Modifier");
+        });
+
+        //afficher le formulaire de la modification
+        document.querySelector('.cover-all').classList.toggle('show');
+        document.querySelector("#addForm").style.display = "none";
+        document.querySelector("#editForm").style.display = "block";
+
+    }
+
+
+    useEffect(() => {
+        document.title="Enseignants - Admin";
+        axios.get('api/ens/all').then(res=> {
+            setDataList(res.data)
+        });
+    },[]);
+
+    if(localStorage.getItem('token')) {
+        return(
+            <>
+                <div class="container">
+                    <h4>Liste des Enseignants dans la base de donées :</h4>
+                    <table class ="highlight stripped">
+                        <thead>
+                            <tr class="grey lighten-2">
+                                <th>N°</th>
+                                <th>Identifiant</th>
+                                <th>Nom</th>
+                                <th>Prenom</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody class="grey lighten-3">          
+                            {dataList.map((val)=> {
+                                return (
+                                        <tr>
+                                            <td>{val.numEns}</td>
+                                            <td>{val.idEnseignant}</td>
+                                            <td>{val.nomEns}</td>
+                                            <td>{val.prenomEns}</td>
+                                            <td className="iconsTd"> 
+                                                <form onSubmit={deleteEns}>
+                                                    <input id={val.idEnseignant} type="hidden" value={val.idEnseignant} />
+                                                    <button type="submit"  onClick={e => setIdEns(document.getElementById(""+val.idEnseignant).value)}><i class="fas fa-trash-alt"/></button>    
+                                                </form>   
+                                                <form onSubmit={openEditEns}>
+                                                    <input id={val.idEnseignant} type="hidden" value={val.idEnseignant} />
+                                                    <button type="submit"  onClick={e => setIdEns(document.getElementById(""+val.idEnseignant).value)}><i class="fa-solid fa-pen-to-square"/></button>    
+                                                </form>                                               
+                                             </td>
+                                        </tr>
+                                )
+                             })}
+                        </tbody>
+                    </table>
+                    <div className="add-admin-icon">
+                        
+                        <i className="fa-solid fa-circle-plus" onClick={openExitAddEns}></i>
+                        <span >Ajouter un ensiegnant</span>
+                    
+                      </div>
+                      <div className="cover-all">
+                          <div class="col s12 m6">
+                                  <div class="card white">
+                                      <div class="card-content black-text">
+                                          <span class="card-title center crufFormSpan">{method} un ensiegnant</span>
+                                          <form onSubmit={handleSubmitAddEtud("add")} id="addForm">
+                                                  <i class="fas fa-times" onClick={openExitAddEns}></i>
+                                                  <div class="group"> 
+                                                      <label>N°</label>
+                                                      <input type="text" required autoFocus onChange={e => setNumEns(e.target.value)}/>      
+                                                  </div> 
+                                                  <div class="group"> 
+                                                      <label>Identifiant</label>
+                                                      <input type="text" required autoFocus onChange={e => setIdEns(e.target.value)}/>      
+                                                  </div>   
+                                                  <div class="group"> 
+                                                      <label>Nom</label>
+                                                      <input type="text" required autoFocus onChange={e => setNomEns(e.target.value)}/>      
+                                                  </div>   
+                                                  <div class="group"> 
+                                                      <label>Prénom</label>
+                                                      <input type="text" required autoFocus onChange={e => setPrenomEns(e.target.value)}/>      
+                                                  </div>  
+                                                  <div class="group"> 
+                                                      <label>Mot de passe</label>
+                                                      <input type="password" required autoFocus onChange={e => setMotDePasse(e.target.value)}/>      
+                                                  </div>   
+                                                  <div class="group">
+                                                      <label>Est Président de jury </label>
+  
+                                                      <select className="crud-select" onChange={e => setEstPresidentJury(e.target.value)}>
+                                                          <option value="0"  selected>Non</option>
+                                                          <option value="1" >oui</option>
+
+                                                          
+                                                      </select>
+                                                      </div>
+                                                  <div class="left-align">
+                                                      <button class="btn">Ajouter</button>
+                                                  </div>
+                                              </form>
+
+                                              <form onSubmit={handleSubmitAddEtud("edit")} id="editForm">
+                                                  <i class="fas fa-times" onClick={openExitAddEns}></i>
+                                                  <div class="group"> 
+                                                      <label>N°</label>
+                                                      <input type="text" value={numEns} required autoFocus disabled onChange={e => setNumEns(e.target.value)}/>      
+                                                  </div> 
+                                                  <div class="group"> 
+                                                      <label>Identifiant</label>
+                                                      <input type="text" value={idEns} required autoFocus onChange={e => setIdEns(e.target.value)}/>      
+                                                  </div>   
+                                                  <div class="group"> 
+                                                      <label>Nom</label>
+                                                      <input type="text" value={nomEns} required autoFocus onChange={e => setNomEns(e.target.value)}/>      
+                                                  </div>   
+                                                  <div class="group"> 
+                                                      <label>Prénom</label>
+                                                      <input type="text" value={prenomEns} required autoFocus onChange={e => setPrenomEns(e.target.value)}/>      
+                                                  </div>  
+                                              </form>
+                                      </div>
+                                  </div>
+                          </div>
+  
+                      </div>
+                 </div>
+        </>
+    );
+    } else {
+        return(<Navigate to="/admin"></Navigate>);
+    }
+};
+
+export default EnsCRUD;

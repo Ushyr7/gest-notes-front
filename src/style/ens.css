@@ -1,0 +1,11 @@
+
+.large-div {
+     width: 80%;
+}
+
+.card-content .fa-times {
+     position: absolute;
+     top: 20px;
+     right: 20px;
+     font-size: 1.2rem;
+}

@@ -4,7 +4,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import axios from 'axios';
 
-axios.defaults.baseURL ='http://10.130.163.114/';
+axios.defaults.baseURL ='http://srv-dpi-proj-gestnotes.univ-rouen.fr/';
 axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token');
 ReactDOM.render(
   <React.StrictMode>

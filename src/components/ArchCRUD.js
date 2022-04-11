@@ -5,7 +5,6 @@ import { Navigate } from 'react-router-dom';
 const ArchCRUD =() => {
     const[dataList, setDataList] = useState([]);
 
-    const[semestre, setSemestre] = useState("");
     const[annee, setAnnee] = useState("");
     
     const openExitAddArch = () => {
@@ -16,22 +15,9 @@ const ArchCRUD =() => {
     }
 
     
-    const handleSubmitAddArch =  async(e) => {
-        e.preventDefault();
-
-        const data = {
-            semestre: semestre
-        }
-        console.log(data);
-        const options = {
-            headers: {"content-type": "application/json"}
-        }
-        axios.post('api/archive',data,options)
+    const handleSubmitAddArch =  () => {
+        axios.post('api/archive')
         .then(res=> {
-            console.log('succes');  
-            alert("Archive ajoutée avec succées");
-            document.location.reload();
-
         });
     };
     const handleSubmitDelArch =  async(e) => {
@@ -84,8 +70,7 @@ const ArchCRUD =() => {
                                 <th>N°Etudiant</th>
                                 <th>Etudiant</th>
                                 <th>TP</th>
-                                <th>CC1</th>
-                                <th>CC2</th>
+                                <th>CC</th>
                                 <th>Exam</th>
                             </tr>
                         </thead>
@@ -107,8 +92,7 @@ const ArchCRUD =() => {
                                     <td>{val.numEtu}</td>
                                     <td>{val.nomEtu} {val.prenomEtu}</td>
                                     <td>{val.noteTP}</td>
-                                    <td>{val.noteCC1}</td>
-                                    <td>{val.noteCC2}</td>
+                                    <td>{val.noteCC}</td>
                                     <td>{val.noteExam}</td>
                                 </tr>
                                 )
@@ -132,14 +116,6 @@ const ArchCRUD =() => {
                                         <span className="card-title center crufFormSpan">Ajouter une archive</span>
                                         <form onSubmit={handleSubmitAddArch}>
                                                 <i className="fas fa-times" onClick={openExitAddArch}></i>
-                                                <div className="group"> 
-                                                    <label>Semestre</label>
-                                                    <select className="crud-select" onChange={e => setSemestre(e.target.value)}>
-                                                        <option value="" disabled selected>Séléctionnez le semestre</option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                    </select>
-                                                </div>
                                                 <div className="left-align">
                                                     <button className="btn">Archiver</button>
                                                 </div>

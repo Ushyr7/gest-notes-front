@@ -2,9 +2,12 @@ import React,{ useState, useEffect } from "react";
 import axios from "axios";
 import '../style/ens.css';
 
+
 const HomeEns = (props) => {
 
     const [dataList,setDataList] = useState([]);
+    const [dataListFormationPresident,dataListFormationPresidentsetDataList] = useState([]);
+
     const [idEnseignement,setIdEnseignement] = useState('');
     const [cuurentEnsignement,setCuurentEnsignement] = useState([]);
     const [moduleName,setmoduleName] = useState('');
@@ -34,7 +37,14 @@ const HomeEns = (props) => {
         document.querySelector('.cover-all').classList.toggle('show');
     }
 
+    const obtenirPDF = (idForm) => {
+        /*const doc = new jsPDF();
+        doc.text("Hello world!", 10, 10);
+        doc.save("PV.pdf");*/
+    }
+
     useEffect ( ()=> {
+        document.title = "Accueil Enseignant"; 
         const rCount = sessionStorage.getItem('rCount');
         if(rCount < 1) {
           sessionStorage.setItem('rCount', String(rCount + 1));
@@ -56,6 +66,13 @@ const HomeEns = (props) => {
         axios.post('api/ens/ensgmt',data,options).then(res=> {
             setDataList(res.data)
         });
+
+        axios.post('api/ens/forma',data,options).then(res=> {
+            dataListFormationPresidentsetDataList(res.data)
+            console.log(res.data);
+        });
+
+
     },[props?.user?.num]);
 
     
@@ -63,60 +80,75 @@ const HomeEns = (props) => {
     if(props.user) {  
         return (
             <React.Fragment>
+
             <div class="container">
-                 <h4>Bonjour {props.user.prenom} {props.user.nom}</h4>
-                  <div>
-                    <div class= "container">
-                        <h5>Vos enseignements :</h5>
-                        <table class ="highlight stripped responsive-table">
-                            <thead>
-                                <tr class="grey lighten-2">
-                                    <th>Identifiant</th>
-                                    <th>TP</th>
-                                    <th>CC1</th>
-                                    <th>CC2</th>
-                                    <th>Exam</th>
-                                    <th>Module</th>
-                                    <th>Nom</th>
-                                    <th>Notes</th>
-
-                                </tr>
-                            </thead>
-
-                            <tbody class="white">          
-                       
-                                {dataList.map((val)=> {
-                           
-                                    return (
-                                        <tr className="ensg_tr" >
-                                            <td>{val.idEnseignement}</td>
-                                            <td>{val.coeffTP}</td>
-                                            <td>{val.coeffCC1}</td>
-                                            <td>{val.coeffCC2}</td>
-                                            <td>{val.coeffExam}</td>
-                                            <td>{val.nomModule}</td>
-                                            <td>{val.nomEnseignement}</td>      
-                                            <td>
-                                            <form onSubmit={goModule}>
-                                                <input id={val.idEnseignement} type="hidden" value={val.idEnseignement} />
-
-                                                <button type="submit"  onClick={ e => {
-                                                    setIdEnseignement(document.getElementById(""+val.idEnseignement).value);
-                                                    setmoduleName(val.nomModule);
-                                                }}>
-                                                    <i class="fas fa-tv"/>
-                                                </button>    
-                                            </form>   
-                                                                      
-                                            </td>
-                                        </tr>
-                                        )
-                                    })}
-                          
-                                </tbody>
-                            </table>
+                <h4>Bonjour {props.user.prenom} {props.user.nom}</h4>     
+                <div class="row">
+                    <div class="col s12 m12">
+                        <div class="card teal lighten-2">
+                            <div class="card-content white-text">
+                            <h5>Président du jury :</h5> 
+                            {dataListFormationPresident.map((val)=> {
+                            return (
+                                <p><h7>{val.idForma} - {val.nomForma}</h7> <i class="fas fa-file-pdf" onClick={obtenirPDF(val.idForma)}></i> </p>
+                            )
+                            })}
+                            </div>
                         </div>
                     </div>
+                </div>
+                <div class="row">
+                    <div class="col s12 m12">
+                        <div class="card">
+                            <div class="card-content black-text">
+                                <h5>Vos enseignements :</h5>
+                                <div class="card-action"></div>
+                                <table class ="highlight stripped responsive-table">
+                                <thead>
+                                    <tr class="grey lighten-2">
+                                        <th>Identifiant</th>
+                                        <th>TP</th>
+                                        <th>CC1</th>
+                                        <th>CC2</th>
+                                        <th>Exam</th>
+                                        <th>Module</th>
+                                        <th>Nom</th>
+                                        <th>Notes</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="white">          
+                                    {dataList.map((val)=> {
+                           
+                                        return (
+                                            <tr className="ensg_tr" >
+                                                <td>{val.idEnseignement}</td>
+                                                <td>{val.coeffTP}</td>
+                                                <td>{val.coeffCC1}</td>
+                                                <td>{val.coeffCC2}</td>
+                                                <td>{val.coeffExam}</td>
+                                                <td>{val.nomModule}</td>
+                                                <td>{val.nomEnseignement}</td>      
+                                                <td>
+                                                <form onSubmit={goModule}>
+                                                    <input id={val.idEnseignement} type="hidden" value={val.idEnseignement} />
+                                                    <button type="submit"  onClick={ e => {
+                                                        setIdEnseignement(document.getElementById(""+val.idEnseignement).value);
+                                                        setmoduleName(val.nomModule);
+                                                    }}>
+                                                        <i class="fas fa-tv"/>
+                                                    </button>    
+                                                </form>                         
+                                                </td>
+                                            </tr>
+                                        )
+                                        })}
+                          
+                                </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 
 
                               
@@ -133,8 +165,7 @@ const HomeEns = (props) => {
                                 <tr class="">
                                     <th>Nom et prénom </th>
                                     <th>Note TP</th>
-                                    <th>Note CC1</th>
-                                    <th>Note CC2</th>
+                                    <th>Note CC</th>
                                     <th>Note Exam</th>
                                     <th>Session</th>
                                     <th>Année Univ</th>
@@ -145,8 +176,7 @@ const HomeEns = (props) => {
                                 <tr>
                                     <td>{val.nomEtu} {val.prenomEtu}</td>
                                     <td>{val.noteTP}</td>
-                                    <td>{val.noteCC1}</td>
-                                    <td>{val.noteCC2}</td>
+                                    <td>{val.noteCC}</td>
                                     <td>{val.noteExam}</td>
                                     <td>{val.session}</td>
                                     <td>{val.AnnéeUniv}</td>

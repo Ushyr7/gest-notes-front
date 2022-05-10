@@ -74,3 +74,13 @@ td,th {
 .container h4 {
     margin: 35px 0px 25px 0px !important;
 }
+#toast-container {
+    top: 85% !important;
+    right: 3% !important;
+}
+#toast-container .toast {
+    font-weight: 400 !important;
+}
+.err-toast {
+    color: #ee6e73 !important;
+}

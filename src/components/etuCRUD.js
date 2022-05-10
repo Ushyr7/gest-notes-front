@@ -30,6 +30,7 @@ const EtuCRUD =() => {
         setPrenomEtud("");
         setMotDePasse("");
         setidForma("");
+        clearAddForm();
         setMethod("Ajouter");
 
     }
@@ -52,17 +53,34 @@ const EtuCRUD =() => {
         if(type === "add") {
             axios.post('api/etu',data,options)
             .then(res=> {
-                console.log('succes');  
-                alert("Étudiant ajouté avec succés");
-                document.location.reload();
+                openExitAddEtu();  
+                updateList();
+                clearAddForm();
+                window.M.toast({ html: 'Étudiant ajouté avec succés' , classes:'teal lighten-2 rounded '},2500);
+                
+            }).catch( err => {
+                //tester si le id entré est éxiste déja et le num aussi
+                const idIdExist = dataList.filter(v => v.idEtu  === data.id);
+                const numIsExist = dataList.filter(v => v.numEtu  === data.num);
+                if(idIdExist.length != 0) { // ici on  trouvé l'id dans la liste ddes université 
+                    window.M.toast({ html: 'l\'id que vous avez entré existe déja !' , classes:'  rounded red '},2500)
+                } else if(numIsExist.length != 0) { 
+                    window.M.toast({ html: 'le numéro que vous avez entré existe déja !' , classes:'  rounded red '},2500)
+                }
+                else {
+                    window.M.toast({ html: ''.err.message , classes:'  rounded red '},2500)                     
+                }
             });
         } else {
             axios.put('api/etu',data,options)
             .then(res=> {
-                console.log('succes');  
-                alert("Étudiant ajouté avec succés");
-                document.location.reload();
-            }); 
+                openExitAddEtu();  
+                updateList();
+                window.M.toast({ html: 'Étudiant modifié avec succés' , classes:'teal lighten-2 rounded '},2500);
+    
+            }).catch( err => {
+                window.M.toast({ html: ''.err.message , classes:'  rounded red '},2500)                     
+            });
         }
         
     };
@@ -80,10 +98,10 @@ const EtuCRUD =() => {
         }
         axios.post('api/etu/del',data,options)
         .then(res=> {
-            console.log('succes');  
-            alert("Étudiant supprimer avec succées");
-            document.location.reload();
-
+            updateList();
+            window.M.toast({ html: 'Étudiant supprimé avec succés' , classes:'teal lighten-2 rounded '},2500);
+        }).catch( err => {
+            window.M.toast({ html: ''.err.message , classes:'  rounded red '},2500)                     
         });
     };
 
@@ -121,6 +139,24 @@ const EtuCRUD =() => {
             setDataListForma(res.data)
         });
     },[]);
+
+    const updateList = () =>  {
+        axios.get('api/etu/all').then(res=> {
+            setDataList(res.data)
+        });
+    }
+
+    const clearAddForm = ()=> {
+         const allInputs = document.querySelectorAll('#addForm input');
+
+         allInputs.forEach ( input => {
+                 input.value = "";  
+         });
+
+         var select = document.querySelector("#addFormSelect");
+         
+         select.options[0].selected = true;
+    }
 
     if(localStorage.getItem('token')) {
         return(
@@ -198,7 +234,7 @@ const EtuCRUD =() => {
                                                 <div class="group">
                                                     <label>Formation</label>
 
-                                                    <select className="crud-select" onChange={e => setidForma(e.target.value)}>
+                                                    <select className="crud-select" id="addFormSelect" onChange={e => setidForma(e.target.value)}>
                                                         <option value="" disabled selected>Séléctionnez la formation</option>
                                                         {dataListForma.map((val)=> {
                                                             return (

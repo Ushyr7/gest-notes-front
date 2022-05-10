@@ -18,7 +18,9 @@ const UnivCRUD =() => {
          //state par défaut
          setidUniversite("");
          setnomUniversite("");
+         clearAddForm();
          setMethod("Ajouter");
+
     }
 
     const handleSubmitAddUniv =  type => async(e) => {
@@ -37,18 +39,29 @@ const UnivCRUD =() => {
         if(type === "add") {
             axios.post('api/univ',data,options)
             .then(res=> {
-                console.log('succes');  
-                alert("université ajoutée avec succés");
-                document.location.reload();
-    
+                openExitAddFac();  
+                updateList();
+                clearAddForm();
+                window.M.toast({ html: 'Université ajoutée avec succés' , classes:'teal lighten-2 rounded '},2500);
+               
+            }).catch( err => {
+                //tester si le id entré est éxiste déja
+                const idIdExist = dataList.filter(v => v.idUniversite  === data.id);
+                if(idIdExist.length != 0) { // ici on  trouvé l'id dans la liste ddes université 
+                    window.M.toast({ html: 'l\'id que vous avez entré existe déja !' , classes:'  rounded red '},2500)
+                } else {
+                    window.M.toast({ html: ''.err.message , classes:'  rounded red '},2500)                     
+                }
             });
         } else {
             axios.put('api/univ',data,options)
             .then(res=> {
-                console.log('succes');  
-                alert("université modifiée avec succés");
-                document.location.reload();
+                openExitAddFac();  
+                updateList();
+                window.M.toast({ html: 'Université modifiée avec succés' , classes:'teal lighten-2 rounded '},2500);
     
+            }).catch( err => {
+                window.M.toast({ html: ''.err.message , classes:'  rounded red '},2500)                     
             });
         }
        
@@ -66,10 +79,10 @@ const UnivCRUD =() => {
         }
         axios.post('api/univ/del',data,options)
         .then(res=> {
-            console.log('succes');  
-            alert("université supprimer avec succés");
-            document.location.reload();
-
+            updateList();
+            window.M.toast({ html: 'Université supprimée avec succés' , classes:'teal lighten-2 rounded '},2500);
+        }).catch( err => {
+            window.M.toast({ html: ''.err.message , classes:'  rounded red '},2500)                     
         });
     };
 
@@ -100,9 +113,24 @@ const UnivCRUD =() => {
         });
     },[]);
 
+    const updateList = () =>  {
+        axios.get('api/univ/all').then(res=> {
+            setDataList(res.data)
+        });
+    }
+
+    const clearAddForm = ()=> {
+         const allInputs = document.querySelectorAll('#addForm input');
+
+         allInputs.forEach ( input => {
+                 input.value = "";  
+         });
+    }
+
     if(localStorage.getItem('token')) {
         return(
-            <>
+            <React.Fragment>
+                 
                 <div class="container">
                     <h4>Liste des Universités dans la base de donées :</h4>
                     <table class ="highlight stripped">
@@ -179,10 +207,11 @@ const UnivCRUD =() => {
                                     </div>
                                 </div>
                         </div>
-
+                        
                     </div>
                  </div>
-        </>
+                 
+        </React.Fragment>
     );
     } else {
         return(<Navigate to="/admin"></Navigate>);

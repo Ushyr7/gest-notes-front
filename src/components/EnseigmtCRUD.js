@@ -37,6 +37,7 @@ const EnseigmtCRUD =() => {
         setNumEns("");
         setIdMod("");
         setidEnseignement("");
+        clearAddForm();
         setMethod("Ajouter");
    }
 
@@ -60,17 +61,29 @@ const EnseigmtCRUD =() => {
         if(type === "add") {
             axios.post('api/ensgmt',data,options)
             .then(res=> {
-                console.log('succes');  
-                alert("Enseignement ajouté avec succés");
-                document.location.reload();
+                openExitAddEnsg();  
+                updateList();
+                clearAddForm();
+                window.M.toast({ html: 'Enseignement ajouté avec succés' , classes:'teal lighten-2 rounded '},2500);
 
+            }).catch( err => {
+                //tester si le id entré est éxiste déja
+                const idIdExist = dataList.filter(v => v.idEnseignement  === data.id);
+                if(idIdExist.length != 0) { // ici on  trouvé l'id dans la liste ddes université 
+                    window.M.toast({ html: 'l\'id que vous avez entré existe déja !' , classes:'  rounded red '},2500)
+                } else {
+                    window.M.toast({ html: ''.err.message , classes:'  rounded red '},2500)                     
+                }
             });
         } else {
             axios.put('api/ensgmt',data,options)
             .then(res=> {
-                console.log('succes');  
-                alert("Enseignement ajouté avec succés");
-                document.location.reload();
+                openExitAddEnsg();  
+                updateList();
+                window.M.toast({ html: 'Enseignement modifié avec succés' , classes:'teal lighten-2 rounded '},2500);
+    
+            }).catch( err => {
+                window.M.toast({ html: ''.err.message , classes:'  rounded red '},2500)                     
             });
         }
     };
@@ -88,10 +101,10 @@ const EnseigmtCRUD =() => {
         }
         axios.post('api/ensgmt/del',data,options)
         .then(res=> {
-            console.log('succes');  
-            alert("Enseignement supprimer avec succées");
-            document.location.reload();
-
+            updateList();
+            window.M.toast({ html: 'Enseignement supprimé avec succés' , classes:'teal lighten-2 rounded '},2500);
+        }).catch( err => {
+            window.M.toast({ html: ''.err.message , classes:'  rounded red '},2500)                     
         });
     };
 
@@ -119,6 +132,25 @@ const EnseigmtCRUD =() => {
         document.querySelector("#addForm").style.display = "none";
         document.querySelector("#editForm").style.display = "block";
 
+    }
+
+    const updateList = () =>  {
+        axios.get('api/enseign/all').then(res=> {
+            setDataList(res.data)
+        });
+    }
+
+    const clearAddForm = ()=> {
+         const allInputs = document.querySelectorAll('#addForm input');
+
+         allInputs.forEach ( input => {
+                 input.value = "";  
+         });
+
+         var selects = document.querySelectorAll(".addFormSelect");
+         selects.forEach(select => {
+            select.options[0].selected = true;
+         });
     }
 
     useEffect(() => {
@@ -227,7 +259,7 @@ const EnseigmtCRUD =() => {
                                                  <div class="group">
                                                     <label>enseignant</label>
 
-                                                    <select className="crud-select" onChange={e => setNumEns(e.target.value)}>
+                                                    <select className="crud-select addFormSelect" onChange={e => setNumEns(e.target.value)}>
                                                         <option value="" disabled selected>Séléctionnez un enseignant </option>
                                                         {dataListEns.map((val)=> {
                                                             return (
@@ -241,7 +273,7 @@ const EnseigmtCRUD =() => {
                                                 <div class="group">
                                                     <label>Module</label>
 
-                                                    <select className="crud-select" onChange={e => setIdMod(e.target.value)}>
+                                                    <select className="crud-select addFormSelect" onChange={e => setIdMod(e.target.value)}>
                                                         <option value="" disabled selected>Séléctionnez un module</option>
                                                         {dataListMod.map((val)=> {
                                                             return (

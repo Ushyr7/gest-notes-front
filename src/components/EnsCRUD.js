@@ -28,11 +28,10 @@ const EnsCRUD =() => {
         setPrenomEns("");
         setMotDePasse("");
         setEstPresidentJury(0);
+        clearAddForm();
         setMethod("Ajouter");
 
     }
-
-
 
     const handleSubmitAddEtud =  type => async(e) => {
         e.preventDefault();
@@ -52,16 +51,33 @@ const EnsCRUD =() => {
         if(type === "add") {
             axios.post('api/ens',data,options)
             .then(res=> {
-                console.log('succes');  
-                alert("Enseignant ajoutée avec succés");
-                document.location.reload();
+                openExitAddEns();  
+                updateList();
+                clearAddForm();
+                window.M.toast({ html: 'Enseignant ajouté avec succés' , classes:'teal lighten-2 rounded '},2500);
+                
+            }).catch( err => {
+                //tester si le id entré est éxiste déja et le num aussi
+                const idIdExist = dataList.filter(v => v.idEnseignant  === data.id);
+                const numIsExist = dataList.filter(v => v.numEns  === data.num);
+                if(idIdExist.length != 0) { // ici on  trouvé l'id dans la liste ddes université 
+                    window.M.toast({ html: 'l\'id que vous avez entré existe déja !' , classes:'  rounded red '},2500)
+                } else if(numIsExist.length != 0) { 
+                    window.M.toast({ html: 'le numéro que vous avez entré existe déja !' , classes:'  rounded red '},2500)
+                }
+                else {
+                    window.M.toast({ html: ''.err.message , classes:'  rounded red '},2500)                     
+                }
             });
         } else {
             axios.put('api/ens',data,options)
             .then(res=> {
-                console.log('succes');  
-                alert("Enseignant modifié avec succés");
-                document.location.reload();
+                openExitAddEns();  
+                updateList();
+                window.M.toast({ html: 'Enseignant modifié avec succés' , classes:'teal lighten-2 rounded '},2500);
+    
+            }).catch( err => {
+                window.M.toast({ html: ''.err.message , classes:'  rounded red '},2500)                     
             });
         }
     };
@@ -71,7 +87,7 @@ const EnsCRUD =() => {
         e.preventDefault();
 
         const data = {
-                id: idEns,
+            id: idEns,
         }
         console.log(data);
         const options = {
@@ -79,10 +95,12 @@ const EnsCRUD =() => {
         }
         axios.post('api/ens/del',data,options)
         .then(res=> {
-            console.log('succes');  
-            alert("Enseignant supprimer avec succés");
-            document.location.reload();
+            openExitAddEns();  
+            updateList();
+            window.M.toast({ html: 'Enseignant modifié avec succés' , classes:'teal lighten-2 rounded '},2500);
 
+        }).catch( err => {
+            window.M.toast({ html: ''.err.message , classes:'  rounded red '},2500)                     
         });
     };
 
@@ -108,13 +126,30 @@ const EnsCRUD =() => {
 
     }
 
-
     useEffect(() => {
         document.title="Enseignants - Admin";
         axios.get('api/ens/all').then(res=> {
             setDataList(res.data)
         });
     },[]);
+
+    const updateList = () =>  {
+        axios.get('api/ens/all').then(res=> {
+            setDataList(res.data)
+        });
+    }
+
+    const clearAddForm = ()=> {
+         const allInputs = document.querySelectorAll('#addForm input');
+
+         allInputs.forEach ( input => {
+                 input.value = "";  
+         });
+
+         var select = document.querySelector("#addFormSelect");
+         
+         select.options[0].selected = true;
+    }
 
     if(localStorage.getItem('token')) {
         return(
@@ -187,6 +222,17 @@ const EnsCRUD =() => {
                                                       <label>Mot de passe</label>
                                                       <input type="password" required autoFocus onChange={e => setMotDePasse(e.target.value)}/>      
                                                   </div>
+                                                  </div>   
+                                                  <div class="group">
+                                                      <label>Est Président de jury </label>
+  
+                                                      <select className="crud-select" id="addFormSelect" onChange={e => setEstPresidentJury(e.target.value)}>
+                                                          <option value="0"  selected>Non</option>
+                                                          <option value="1" >oui</option>
+
+                                                          
+                                                      </select>
+                                                      </div>
                                                   <div class="left-align">
                                                       <button class="btn">Ajouter</button>
                                                   </div>

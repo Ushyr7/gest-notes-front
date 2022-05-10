@@ -15,7 +15,7 @@ const FacCRUD =() => {
     
 
     const openExitAddFac = () => {
-         document.querySelector('.cover-all').classList.toggle('show');
+        document.querySelector('.cover-all').classList.toggle('show');
          
         //état par défaut des forms
         document.querySelector("#editForm").style.display = "none";
@@ -24,6 +24,7 @@ const FacCRUD =() => {
         setidUniversite("");
         setidFac("");
         setnomFac("");
+        clearAddForm();
         setMethod("Ajouter");
     }
 
@@ -42,17 +43,28 @@ const FacCRUD =() => {
         if(type === "add") {
             axios.post('api/fac',data,options)
             .then(res=> {
-                console.log('succes');  
-                alert("Faculté ajoutée avec succés");
-                document.location.reload();
+                openExitAddFac();  
+                updateList();
+                clearAddForm();
+                window.M.toast({ html: 'Faculté ajoutée avec succés' , classes:'teal lighten-2 rounded '},2500);
 
+            }).catch( err => {
+                //tester si le id entré est éxiste déja
+                const idIdExist = dataList.filter(v => v.idFac  === data.id);
+                if(idIdExist.length != 0) { // ici on  trouvé l'id dans la liste ddes université 
+                    window.M.toast({ html: 'l\'id que vous avez entré existe déja !' , classes:'  rounded red '},2500)
+                } else {
+                    window.M.toast({ html: ''.err.message , classes:'  rounded red '},2500)                     
+                }
             });
         } else {
             axios.put('api/fac',data,options)
             .then(res=> {
-                console.log('succes');  
-                alert("Faculté modifiée avec succés");
-                document.location.reload();
+                openExitAddFac();  
+                updateList();
+                window.M.toast({ html: 'Faculté modifiée avec succés' , classes:'teal lighten-2 rounded '},2500);
+            }).catch( err => {
+                window.M.toast({ html: ''.err.message , classes:'  rounded red '},2500)                     
             });
         }
     };
@@ -62,11 +74,13 @@ const FacCRUD =() => {
         e.preventDefault();
         axios.post('api/fac/del', {id: idFac}, {headers: {"content-type": "application/json"}})
         .then(res=> {
-            console.log('succes');  
-            alert("Faculté supprimer avec succés");
-            document.location.reload();
+            updateList();
+            window.M.toast({ html: 'Faculté supprimée avec succés' , classes:'teal lighten-2 rounded '},2500);
+        }).catch( err => {
+            window.M.toast({ html: ''.err.message , classes:'  rounded red '},2500)                     
         });
     };
+    
 
     const openEditFac = (e) => {
         e.preventDefault();
@@ -91,6 +105,23 @@ const FacCRUD =() => {
 
     }
 
+    const updateList = () =>  {
+        axios.get('api/fac/all').then(res=> {
+            setDataList(res.data)
+        });
+    }
+
+    const clearAddForm = ()=> {
+         const allInputs = document.querySelectorAll('#addForm input');
+
+         allInputs.forEach ( input => {
+                 input.value = "";  
+         });
+
+         var select = document.querySelector("#addFormSelect");
+         
+         select.options[0].selected = true;
+    }
 
     useEffect(() => {
         document.title="Facultées - Admin";
@@ -106,6 +137,8 @@ const FacCRUD =() => {
          });
 
     },[]);
+
+
 
     if(localStorage.getItem('token')) {
         return(
@@ -171,7 +204,7 @@ const FacCRUD =() => {
                                                 <div class="group">
                                                     <label>Nom de l'université</label>
 
-                                                    <select className="crud-select" onChange={e => setidUniversite(e.target.value)}>
+                                                    <select className="crud-select" id="addFormSelect" onChange={e => setidUniversite(e.target.value)}>
                                                         <option value="" disabled selected>Séléctionnez l'université</option>
                                                         {dataListUniv.map((val)=> {
                                                             return (

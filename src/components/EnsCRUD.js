@@ -42,8 +42,7 @@ const EnsCRUD =() => {
              mdp: motDePasse,
              nom: nomEns,
              prenom: prenomEns,
-             num: numEns,
-             estPresidentJury: parseInt(estPresidentJury,10)
+             num: numEns
         }
         console.log(data);
         const options = {
@@ -99,7 +98,6 @@ const EnsCRUD =() => {
             setNomEns(result[0].nomEns);
             setPrenomEns(result[0].prenomEns);
             setMotDePasse(result[0].motDePasse);
-            setEstPresidentJury(result[0].estPresidentJury);
             setMethod("Modifier");
         });
 
@@ -188,17 +186,7 @@ const EnsCRUD =() => {
                                                   <div class="group"> 
                                                       <label>Mot de passe</label>
                                                       <input type="password" required autoFocus onChange={e => setMotDePasse(e.target.value)}/>      
-                                                  </div>   
-                                                  <div class="group">
-                                                      <label>Est Président de jury </label>
-  
-                                                      <select className="crud-select" onChange={e => setEstPresidentJury(e.target.value)}>
-                                                          <option value="0"  selected>Non</option>
-                                                          <option value="1" >oui</option>
-
-                                                          
-                                                      </select>
-                                                      </div>
+                                                  </div>
                                                   <div class="left-align">
                                                       <button class="btn">Ajouter</button>
                                                   </div>

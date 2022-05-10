@@ -12,7 +12,6 @@ const EnsCRUD =() => {
     const[nomEns, setNomEns] = useState("");
     const[prenomEns, setPrenomEns] = useState("");
     const[motDePasse, setMotDePasse] = useState("");
-    const[estPresidentJury, setEstPresidentJury] = useState("");
     const[method,setMethod] = useState("");
 
     const openExitAddEns = () => {
@@ -27,7 +26,6 @@ const EnsCRUD =() => {
         setNomEns("");
         setPrenomEns("");
         setMotDePasse("");
-        setEstPresidentJury(0);
         clearAddForm();
         setMethod("Ajouter");
 
@@ -60,9 +58,9 @@ const EnsCRUD =() => {
                 //tester si le id entré est éxiste déja et le num aussi
                 const idIdExist = dataList.filter(v => v.idEnseignant  === data.id);
                 const numIsExist = dataList.filter(v => v.numEns  === data.num);
-                if(idIdExist.length != 0) { // ici on  trouvé l'id dans la liste ddes université 
+                if(idIdExist.length !== 0) { // ici on  trouvé l'id dans la liste ddes université 
                     window.M.toast({ html: 'l\'id que vous avez entré existe déja !' , classes:'  rounded red '},2500)
-                } else if(numIsExist.length != 0) { 
+                } else if(numIsExist.length !== 0) { 
                     window.M.toast({ html: 'le numéro que vous avez entré existe déja !' , classes:'  rounded red '},2500)
                 }
                 else {
@@ -192,67 +190,66 @@ const EnsCRUD =() => {
                     <div className="add-admin-icon">
                         
                         <i className="fa-solid fa-circle-plus" onClick={openExitAddEns}></i>
-                        <span >Ajouter un ensiegnant</span>
+                        <span >Ajouter un enseignant</span>
                     
-                      </div>
-                      <div className="cover-all">
-                          <div class="col s12 m6">
-                                  <div class="card white">
-                                      <div class="card-content black-text">
-                                          <span class="card-title center crufFormSpan">{method} un ensiegnant</span>
-                                          <form onSubmit={handleSubmitAddEtud("add")} id="addForm">
-                                                  <i class="fas fa-times" onClick={openExitAddEns}></i>
-                                                  <div class="group"> 
-                                                      <label>N°</label>
-                                                      <input type="text" required autoFocus onChange={e => setNumEns(e.target.value)}/>      
-                                                  </div> 
-                                                  <div class="group"> 
-                                                      <label>Identifiant</label>
-                                                      <input type="text" required autoFocus onChange={e => setIdEns(e.target.value)}/>      
-                                                  </div>   
-                                                  <div class="group"> 
-                                                      <label>Nom</label>
-                                                      <input type="text" required autoFocus onChange={e => setNomEns(e.target.value)}/>      
-                                                  </div>   
-                                                  <div class="group"> 
-                                                      <label>Prénom</label>
-                                                      <input type="text" required autoFocus onChange={e => setPrenomEns(e.target.value)}/>      
-                                                  </div>  
-                                                  <div class="group"> 
-                                                      <label>Mot de passe</label>
-                                                      <input type="password" required autoFocus onChange={e => setMotDePasse(e.target.value)}/>      
-                                                  </div>
-                                                  </div>   
-                                                  <div class="left-align">
-                                                      <button class="btn">Ajouter</button>
-                                                  </div>
-                                              </form>
+                    </div>
+                    <div className="cover-all">
+                        <div class="col s12 m6">
+                            <div class="card white">
+                                <div class="card-content black-text">
+                                    <span class="card-title center crufFormSpan">{method} un enseignant</span>
+                                    <form onSubmit={handleSubmitAddEtud("add")} id="addForm">
+                                        <i class="fas fa-times" onClick={openExitAddEns}></i>
+                                        <div class="group"> 
+                                            <label>N°</label>
+                                            <input type="text" required autoFocus onChange={e => setNumEns(e.target.value)}/>      
+                                        </div> 
+                                        <div class="group"> 
+                                            <label>Identifiant</label>
+                                            <input type="text" required autoFocus onChange={e => setIdEns(e.target.value)}/>      
+                                        </div>   
+                                        <div class="group"> 
+                                            <label>Nom</label>
+                                            <input type="text" required autoFocus onChange={e => setNomEns(e.target.value)}/>      
+                                        </div>   
+                                        <div class="group"> 
+                                            <label>Prénom</label>
+                                            <input type="text" required autoFocus onChange={e => setPrenomEns(e.target.value)}/>      
+                                        </div>  
+                                        <div class="group"> 
+                                            <label>Mot de passe</label>
+                                            <input type="password" required autoFocus onChange={e => setMotDePasse(e.target.value)}/>      
+                                        </div>
+                                        <div class="left-align">
+                                    <button class="btn">Ajouter</button>
+                                </div>
+                                    </form>
+                                </div>   
 
-                                              <form onSubmit={handleSubmitAddEtud("edit")} id="editForm">
-                                                  <i class="fas fa-times" onClick={openExitAddEns}></i>
-                                                  <div class="group"> 
-                                                      <label>N°</label>
-                                                      <input type="text" value={numEns} required autoFocus disabled onChange={e => setNumEns(e.target.value)}/>      
-                                                  </div> 
-                                                  <div class="group"> 
-                                                      <label>Identifiant</label>
-                                                      <input type="text" value={idEns} required autoFocus onChange={e => setIdEns(e.target.value)}/>      
-                                                  </div>   
-                                                  <div class="group"> 
-                                                      <label>Nom</label>
-                                                      <input type="text" value={nomEns} required autoFocus onChange={e => setNomEns(e.target.value)}/>      
-                                                  </div>   
-                                                  <div class="group"> 
-                                                      <label>Prénom</label>
-                                                      <input type="text" value={prenomEns} required autoFocus onChange={e => setPrenomEns(e.target.value)}/>      
-                                                  </div>  
-                                              </form>
-                                      </div>
-                                  </div>
-                          </div>
-  
+
+                                <form onSubmit={handleSubmitAddEtud("edit")} id="editForm">
+                                    <i class="fas fa-times" onClick={openExitAddEns}></i>
+                                    <div class="group"> 
+                                        <label>N°</label>
+                                            <input type="text" value={numEns} required autoFocus disabled onChange={e => setNumEns(e.target.value)}/>      
+                                    </div> 
+                                    <div class="group"> 
+                                        <label>Identifiant</label>
+                                        <input type="text" value={idEns} required autoFocus onChange={e => setIdEns(e.target.value)}/>      
+                                    </div>   
+                                    <div class="group"> 
+                                        <label>Nom</label>
+                                        <input type="text" value={nomEns} required autoFocus onChange={e => setNomEns(e.target.value)}/>      
+                                    </div>   
+                                    <div class="group"> 
+                                        <label>Prénom</label>
+                                        <input type="text" value={prenomEns} required autoFocus onChange={e => setPrenomEns(e.target.value)}/>      
+                                    </div>  
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                       </div>
-                 </div>
         </>
     );
     } else {

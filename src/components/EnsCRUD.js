@@ -221,12 +221,9 @@ const EnsCRUD =() => {
                                             <input type="password" required autoFocus onChange={e => setMotDePasse(e.target.value)}/>      
                                         </div>
                                         <div class="left-align">
-                                    <button class="btn">Ajouter</button>
-                                </div>
-                                    </form>
-                                </div>   
-
-
+                                            <button class="btn">Ajouter</button>
+                                        </div>
+                                    </form>   
                                 <form onSubmit={handleSubmitAddEtud("edit")} id="editForm">
                                     <i class="fas fa-times" onClick={openExitAddEns}></i>
                                     <div class="group"> 
@@ -249,7 +246,8 @@ const EnsCRUD =() => {
                             </div>
                         </div>
                     </div>
-                      </div>
+                </div>
+            </div>
         </>
     );
     } else {

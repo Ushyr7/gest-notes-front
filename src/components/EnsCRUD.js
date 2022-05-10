@@ -223,16 +223,6 @@ const EnsCRUD =() => {
                                                       <input type="password" required autoFocus onChange={e => setMotDePasse(e.target.value)}/>      
                                                   </div>
                                                   </div>   
-                                                  <div class="group">
-                                                      <label>Est Président de jury </label>
-  
-                                                      <select className="crud-select" id="addFormSelect" onChange={e => setEstPresidentJury(e.target.value)}>
-                                                          <option value="0"  selected>Non</option>
-                                                          <option value="1" >oui</option>
-
-                                                          
-                                                      </select>
-                                                      </div>
                                                   <div class="left-align">
                                                       <button class="btn">Ajouter</button>
                                                   </div>

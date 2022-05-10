@@ -9,15 +9,26 @@ const ArchCRUD =() => {
     
     const openExitAddArch = () => {
          document.querySelector('#ajouter').classList.toggle('show');
+         clearAddForm();
     }
     const openExitDelArch = () => {
          document.querySelector('#supprimer').classList.toggle('show');
+         clearAddForm();
     }
 
     
-    const handleSubmitAddArch =  () => {
+    const handleSubmitAddArch =  (e) => {
+        e.preventDefault();
         axios.post('api/archive')
         .then(res=> {
+            openExitAddArch();  
+            updateList();
+            clearAddForm();
+            window.M.toast({ html: 'Archive ajouté avec succés' , classes:'teal lighten-2 rounded '},2500);
+        }).catch( err => {
+            
+            window.M.toast({ html: ''.err.message , classes:'  rounded red '},2500)                     
+            
         });
     };
     const handleSubmitDelArch =  async(e) => {
@@ -32,13 +43,28 @@ const ArchCRUD =() => {
         }
         axios.post('api/archive/del',data,options)
         .then(res=> {
-            console.log(res);  
-            alert("Suppression avec succées");
-            document.location.reload();
-
-        });
+            handleSubmitDelArch();  
+            updateList();
+            window.M.toast({ html: 'Archive supprimé avec succés' , classes:'teal lighten-2 rounded '},2500);
+    
+            }).catch( err => {
+                window.M.toast({ html: ''.err.message , classes:'  rounded red '},2500)                     
+            });
     };
 
+    const updateList = () =>  {
+        axios.get('api/archive/all').then(res=> {
+            setDataList(res.data)
+        });
+    }
+
+    const clearAddForm = ()=> {
+         const allInputs = document.querySelectorAll('#addForm input,#delForm input');
+
+         allInputs.forEach ( input => {
+                 input.value = "";  
+         });
+    }
 
     useEffect(() => {
         document.title="Archivage";
@@ -114,7 +140,7 @@ const ArchCRUD =() => {
                                 <div className="card white">
                                     <div className="card-content black-text">
                                         <span className="card-title center crufFormSpan">Ajouter une archive</span>
-                                        <form onSubmit={handleSubmitAddArch}>
+                                        <form onSubmit={handleSubmitAddArch} id="addForm">
                                                 <i className="fas fa-times" onClick={openExitAddArch}></i>
                                                 <div className="left-align">
                                                     <button className="btn">Archiver</button>
@@ -131,7 +157,7 @@ const ArchCRUD =() => {
                                 <div className="card white">
                                     <div className="card-content black-text">
                                         <span className="card-title center crufFormSpan">Supprimer l'archive</span>
-                                        <form onSubmit={handleSubmitDelArch}>
+                                        <form onSubmit={handleSubmitDelArch} id="delForm">
                                                 <i className="fas fa-times" onClick={openExitDelArch}></i>
                                                 <div className="group"> 
                                                     <label>Année</label>

@@ -22,7 +22,7 @@ const FormaCRUD =() => {
          document.querySelector('.cover-all').classList.toggle('show');
          
 
-          //état par défaut des forms
+        //état par défaut des forms
         document.querySelector("#editForm").style.display = "none";
         document.querySelector("#addForm").style.display = "block";
 
@@ -32,6 +32,7 @@ const FormaCRUD =() => {
         setcredit("");
         setnumEns("");
         setidForma("");
+        clearAddForm();
         setMethod("Ajouter");
     }
 
@@ -53,18 +54,27 @@ const FormaCRUD =() => {
         if(type === "add") {
             axios.post('api/forma',data,options)
             .then(res=> {
-                console.log('succes');  
-                alert("Formation ajoutée avec succés");
-                document.location.reload();
-
+                openExitAddForma();  
+                updateList();
+                clearAddForm();
+                window.M.toast({ html: 'Formation ajoutée avec succés' , classes:'teal lighten-2 rounded '},2500);
+            }).catch( err => {
+                //tester si le id entré est éxiste déja
+                const idIdExist = dataList.filter(v => v.idForma  === data.id);
+                if(idIdExist.length != 0) { // ici on  trouvé l'id dans la liste des formations 
+                    window.M.toast({ html: 'l\'id que vous avez entré existe déja !' , classes:'  rounded red '},2500)
+                } else {
+                    window.M.toast({ html: ''.err.message , classes:'  rounded red '},2500)                     
+                }
             });
         } else {
             axios.put('api/forma',data,options)
             .then(res=> {
-                console.log('succes');  
-                alert("Formation ajoutée avec succés");
-                document.location.reload();
-
+                openExitAddForma();  
+                updateList();
+                window.M.toast({ html: 'Formation modifiée avec succés' , classes:'teal lighten-2 rounded '},2500);
+            }).catch( err => {
+                window.M.toast({ html: ''.err.message , classes:'  rounded red '},2500)                     
             });
         }
     };
@@ -82,10 +92,10 @@ const FormaCRUD =() => {
         }
         axios.post('api/forma/del',data,options)
         .then(res=> {
-            console.log('succes');  
-            alert("Formation supprimer avec succés");
-            document.location.reload();
-
+            updateList();
+            window.M.toast({ html: 'Formation supprimée avec succés' , classes:'teal lighten-2 rounded '},2500);
+        }).catch( err => {
+            window.M.toast({ html: ''.err.message , classes:'  rounded red '},2500)                     
         });
     };
 
@@ -118,8 +128,10 @@ const FormaCRUD =() => {
     useEffect(() => {
         document.title="Formations - Admin";
         axios.get('api/forma/all').then(res=> {
-            setDataList(res.data)
+            setDataList(res.data);
+            console.log(res.data)
         });
+
 
         axios.get('api/dep/all').then(res=> {
             setDataListDept(res.data)
@@ -130,6 +142,25 @@ const FormaCRUD =() => {
             console.log(res.data);
          });
     },[]);
+
+    const updateList = () =>  {
+        axios.get('api/forma/all').then(res=> {
+            setDataList(res.data)
+        });
+    }
+
+    const clearAddForm = ()=> {
+         const allInputs = document.querySelectorAll('#addForm input');
+
+         allInputs.forEach ( input => {
+                 input.value = "";  
+         });
+
+         var selects = document.querySelectorAll(".addFormSelect");
+         selects.forEach(select => {
+            select.options[0].selected = true;
+         });
+    }
 
     if(localStorage.getItem('token')) {
         return(
@@ -193,7 +224,7 @@ const FormaCRUD =() => {
                                                 <div class="group">
                                                     <label>Nom de département</label>
 
-                                                    <select className="crud-select" onChange={e => setidDept(e.target.value)}>
+                                                    <select className="crud-select addFormSelect" onChange={e => setidDept(e.target.value)}>
                                                         <option value="" disabled selected>Séléctionnez la formation</option>
                                                         {dataListDept.map((val)=> {
                                                             return (
@@ -210,7 +241,7 @@ const FormaCRUD =() => {
                                                 <div class="group">
                                                     <label>Résponsable (enseignant)</label>
 
-                                                    <select className="crud-select" onChange={e => setnumEns(e.target.value)}>
+                                                    <select className="crud-select addFormSelect" onChange={e => setnumEns(e.target.value)}>
                                                         <option value="" disabled selected>Séléctionnez un enseignant</option>
                                                         {dataListEns.map((val)=> {
                                                             return (

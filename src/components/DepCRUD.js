@@ -23,6 +23,7 @@ const DepCRUD =() => {
         setidDepartement("");
         setnomDepartement("");
         setidFac("");
+        clearAddForm();
         setMethod("Ajouter");
 
     }
@@ -42,16 +43,28 @@ const DepCRUD =() => {
         if(type === "add") {
             axios.post('api/dep',data,options)
             .then(res=> {
-                console.log('succes');  
-                alert("Département ajouté avec succés");
-                document.location.reload();
+                openExitAddFac();  
+                updateList();
+                clearAddForm();
+                window.M.toast({ html: 'Département ajouté avec succés' , classes:'teal lighten-2 rounded '},2500);
+            }).catch( err => {
+                //tester si le id entré est éxiste déja
+               //tester si le id entré est éxiste déja
+               const idIdExist = dataList.filter(v => v.idDepartement  === data.id);
+               if(idIdExist.length != 0) { // ici on  trouvé l'id dans la liste ddes université 
+                   window.M.toast({ html: 'l\'id que vous avez entré existe déja !' , classes:'  rounded red '},2500)
+               } else {
+                   window.M.toast({ html: ''.err.message , classes:'  rounded red '},2500)                     
+               }
             });
         } else {
             axios.put('api/dep',data,options)
             .then(res=> {
-                console.log('succes');  
-                alert("Département modifiée avec succés");
-                document.location.reload();
+                openExitAddFac();  
+                updateList();
+                window.M.toast({ html: 'Département modifié avec succés' , classes:'teal lighten-2 rounded '},2500);
+            }).catch( err => {
+                window.M.toast({ html: ''.err.message , classes:'  rounded red '},2500)                     
             });
         }
     };
@@ -69,10 +82,10 @@ const DepCRUD =() => {
         }
         axios.post('api/dep/del',data,options)
         .then(res=> {
-            console.log('succes');  
-            alert("Département supprimer avec succés");
-            document.location.reload();
-
+            updateList();
+            window.M.toast({ html: 'Département supprimé avec succés' , classes:'teal lighten-2 rounded '},2500);
+        }).catch( err => {
+            window.M.toast({ html: ''.err.message , classes:'  rounded red '},2500)                     
         });
     };
     const openEditDep = (e) => {
@@ -93,7 +106,7 @@ const DepCRUD =() => {
         document.querySelector('.cover-all').classList.toggle('show');
         document.querySelector("#addForm").style.display = "none";
         document.querySelector("#editForm").style.display = "block";
-
+        
     }
         
     useEffect(() => {
@@ -107,6 +120,24 @@ const DepCRUD =() => {
         });
         
     },[]);
+
+    const updateList = () =>  {
+        axios.get('api/dep/all').then(res=> {
+            setDataList(res.data)
+        });
+    }
+
+    const clearAddForm = ()=> {
+         const allInputs = document.querySelectorAll('#addForm input');
+
+         allInputs.forEach ( input => {
+              input.value = "";  
+         });
+
+         var select = document.querySelector("#addFormSelect");
+         
+         select.options[0].selected = true;
+    }
 
     if(localStorage.getItem('token')) {
         return(
@@ -170,14 +201,13 @@ const DepCRUD =() => {
                                                 <div class="group">
                                                     <label>Faculté</label>
 
-                                                    <select className="crud-select" onChange={e => setidFac(e.target.value)}>
+                                                    <select className="crud-select" id="addFormSelect" onChange={e => setidFac(e.target.value)} >
                                                         <option value="" disabled selected>Séléctionnez la facuté</option>
                                                         {dataListFac.map((val)=> {
                                                             return (
                                                                 <option value={val.idFac}>{val.nomFac}</option>
                                                             )
                                                         })}
-                                                        
                                                     </select>
                                                     </div>
                                                 <div class="left-align">
@@ -185,7 +215,7 @@ const DepCRUD =() => {
                                                 </div>
                                             </form>
 
-                                            <form onSubmit={handleSubmitAddDep("add")} id="editForm">
+                                            <form onSubmit={handleSubmitAddDep("edit")} id="editForm">
                                                 <i class="fas fa-times" onClick={openExitAddFac}></i>
                                                 <div class="group"> 
                                                     <label>N° Département</label>

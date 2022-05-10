@@ -17,7 +17,7 @@ const ModCRUD =() => {
 
 
     const openExitAddForma = () => {
-         document.querySelector('.cover-all').classList.toggle('show');
+        document.querySelector('.cover-all').classList.toggle('show');
          
         //état par défaut des forms
         document.querySelector("#editForm").style.display = "none";
@@ -28,6 +28,7 @@ const ModCRUD =() => {
         setNom("");
         setcredit("");
         setSemestre("");
+        clearAddForm();
         setMethod("Ajouter");
     }
 
@@ -48,17 +49,27 @@ const ModCRUD =() => {
         if(type === "add") {
             axios.post('api/mod',data,options)
             .then(res=> {
-                console.log('succes');  
-                alert("module ajouté avec succés");
-                document.location.reload();
+                openExitAddForma();  
+                updateList();
+                clearAddForm();
+                window.M.toast({ html: 'Module ajouté avec succés' , classes:'teal lighten-2 rounded '},2500);
+            }).catch( err => {
+                //tester si le id entré est éxiste déja
+                const idIdExist = dataList.filter(v => v.idModule  === data.id);
+                if(idIdExist.length != 0) { // ici on  trouvé l'id dans la liste des modules 
+                    window.M.toast({ html: 'l\'id que vous avez entré existe déja !' , classes:'  rounded red '},2500)
+                } else {
+                    window.M.toast({ html: ''.err.message , classes:'  rounded red '},2500)                     
+                }
             });
         } else {
             axios.put('api/mod',data,options)
             .then(res=> {
-                console.log('succes');  
-                alert("module modifiée avec succés");
-                document.location.reload();
-
+                openExitAddForma();  
+                updateList();
+                window.M.toast({ html: 'Module modifié avec succés' , classes:'teal lighten-2 rounded '},2500);
+            }).catch( err => {
+                window.M.toast({ html: ''.err.message , classes:'  rounded red '},2500)                     
             });
         }
     };
@@ -76,10 +87,10 @@ const ModCRUD =() => {
         }
         axios.post('api/mod/del',data,options)
         .then(res=> {
-            console.log('succes');  
-            alert("Module supprimer avec succés");
-            document.location.reload();
-
+            updateList();
+            window.M.toast({ html: 'Module supprimé avec succés' , classes:'teal lighten-2 rounded '},2500);
+        }).catch( err => {
+            window.M.toast({ html: ''.err.message , classes:'  rounded red '},2500)                     
         });
     };
 
@@ -116,6 +127,25 @@ const ModCRUD =() => {
             setDataListForma(res.data)
          });
     },[]);
+
+    const updateList = () =>  {
+        axios.get('api/mod/all').then(res=> {
+            setDataList(res.data)
+        });
+    }
+
+    const clearAddForm = ()=> {
+         const allInputs = document.querySelectorAll('#addForm input');
+
+         allInputs.forEach ( input => {
+                 input.value = "";  
+         });
+
+         var select = document.querySelector("#addFormSelect");
+         select.options[0].selected = true;
+    }
+
+
 
     if(localStorage.getItem('token')) {
         return(
@@ -194,7 +224,7 @@ const ModCRUD =() => {
                                                  <div class="group">
                                                     <label>Nom de formation</label>
 
-                                                    <select className="crud-select" onChange={e => setidForma(e.target.value)}>
+                                                    <select className="crud-select" id="addFormSelect" onChange={e => setidForma(e.target.value)}>
                                                         <option value="" disabled selected>Séléctionnez la formation</option>
                                                         {dataListForma.map((val)=> {
                                                             return (

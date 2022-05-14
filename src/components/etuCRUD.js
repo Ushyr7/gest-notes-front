@@ -182,7 +182,7 @@ const EtuCRUD =() => {
                                             <td>{val.idEtu}</td>
                                             <td>{val.nomEtu}</td>
                                             <td>{val.prenomEtu}</td>
-                                            <td>{val.formation}</td>
+                                            <td>{val.idForma}</td>
                                             <td className="iconsTd">
                                                 <form onSubmit={deletEtud}>
                                                     <input id={val.idEtu} type="hidden" value={val.idEtu} />

@@ -32,7 +32,6 @@ const EnseigmtCRUD =() => {
         setNom("");
         setPtp("");
         setPCC1("");
-        setPCC2("");
         setPExam("");
         setNumEns("");
         setIdMod("");
@@ -50,8 +49,7 @@ const EnseigmtCRUD =() => {
             numEns: numEns,
             nom: nom,
             tp: parseInt(ptp,10),
-            cc1: parseInt(PCC1,10),
-            cc2: parseInt(PCC2,10),
+            cc: parseInt(PCC1,10),
             exam: parseInt(PExam,10)
         }
         console.log(data);
@@ -119,7 +117,6 @@ const EnseigmtCRUD =() => {
             setNom(result[0].nomEns);
             setPtp(result[0].coeffTP);
             setPCC1(result[0].coeffCC1);
-            setPCC2(result[0].coeffCC2);
             setPExam(result[0].coeffExam);
             setNumEns(result[0].numEns);
             setIdMod(result[0].idModule);
@@ -181,8 +178,7 @@ const EnseigmtCRUD =() => {
                                 <th>N°</th>
                                 <th>Nom</th>
                                 <th>%TP</th>
-                                <th>%CC1</th>
-                                <th>%CC2</th>
+                                <th>%CC</th>
                                 <th>%Exam</th>
                                 <th>Enseignant</th>
                                 <th>Module</th>
@@ -194,10 +190,9 @@ const EnseigmtCRUD =() => {
                                 return (
                                         <tr>
                                             <td>{val.idEnseignement}</td>
-                                            <td>{val.nom}</td>
+                                            <td>{val.nomEnseignement}</td>
                                             <td>{val.coeffTP}</td>
-                                            <td>{val.coeffCC1}</td>
-                                            <td>{val.coeffCC2}</td>
+                                            <td>{val.coeffCC}</td>
                                             <td>{val.coeffExam}</td>
                                             <td>{val.nomEns}</td>
                                             <td>{val.nomModule}</td>
@@ -243,13 +238,9 @@ const EnseigmtCRUD =() => {
                                                     <input type="text" required autoFocus onChange={e => setPtp(e.target.value)}/>      
                                                 </div>  
                                                 <div class="group"> 
-                                                    <label>coeffCC1</label>
+                                                    <label>coeffCC</label>
                                                     <input type="text" required autoFocus onChange={e => setPCC1(e.target.value)}/>      
                                                 </div>
-                                                <div class="group"> 
-                                                    <label>coeffCC2</label>
-                                                    <input type="text" required autoFocus onChange={e => setPCC2(e.target.value)}/>      
-                                                </div>   
                                                 <div class="group"> 
                                                     <label>coeffExam</label>
                                                     <input type="text" required autoFocus onChange={e => setPExam(e.target.value)}/>      
@@ -304,13 +295,9 @@ const EnseigmtCRUD =() => {
                                                     <input type="text" value={ptp} required autoFocus onChange={e => setPtp(e.target.value)}/>      
                                                 </div>  
                                                 <div class="group"> 
-                                                    <label>coeffCC1</label>
+                                                    <label>coeffCC</label>
                                                     <input type="text" value={PCC1} required autoFocus onChange={e => setPCC1(e.target.value)}/>      
                                                 </div>
-                                                <div class="group"> 
-                                                    <label>coeffCC2</label>
-                                                    <input type="text"  value={PCC2} required autoFocus onChange={e => setPCC2(e.target.value)}/>      
-                                                </div>   
                                                 <div class="group"> 
                                                     <label>coeffExam</label>
                                                     <input type="text" value={PExam} required autoFocus onChange={e => setPExam(e.target.value)}/>      

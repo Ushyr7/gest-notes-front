@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@grapecity/wijmo.react.all": "^5.20221.842",
     "@grapecity/wijmo.react.grid": "^5.20221.842",
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^12.1.2",

@@ -4,6 +4,8 @@ import '../style/ens.css';
 import { jsPDF } from "jspdf";
 import * as Wj from '@grapecity/wijmo.react.grid';
 import "@grapecity/wijmo.styles/wijmo.css";
+import * as wjcCore from '@grapecity/wijmo';
+wjcCore.setLicenseKey('quentin.ridel@etu.univ-rouen.fr,E612957246325918#B03ZxJCLlNHbhZmOiI7ckJye0ICbuFkI1pjIEJCLi4TPnpVazImU494Ys9EdGp5SPVWMpBDZC5kTnNEbSRGcqpmdwFDMiFVTuhjV6QWRYNzSa96YB34VvMje4w4UyMUTLtUSLNmZXZ7YvJkZUp5bL3iSG3EZaBTeTZ5NnZVOvt4QxwWT7w4V9dFZaFnUBVjeUlGUsp7Nq3WYxoWUvQTYk3SMzUDZElGcRhzZndlMTtiWxlEbB9GbZJlTwNkayljaaVGTa54UpZHMvQ4NHtUR7FTczMkepR7dCpXO8NTZERWdmRzRIpmaotUOyt6LO9EZyMWb7hDNOZHM5hTONVVS6sGWxhXMsRFToJGRj3GbIZDM7pVT4lXUUZmeBNUT0xESuRGTjJHR8RnQPJDbvNHVPRkTlBnZm3GOsRnNw4Ga8kDMXpGc4F4UC5WYDVDenFzQjl4YmhDMMRnRupmc4NDcORFW92WZlhXS5pEejJlWTZ5Q4oGTINmRiojITJCLiEEMCZUMxYkNiojIIJCL4gTM8cjNwETO0IicfJye#4Xfd5nIJBjMSJiOiMkIsIibvl6cuVGd8VEIgQXZlh6U8VGbGBybtpWaXJiOi8kI1xSfiUTSOFlI0IyQiwiIu3Waz9WZ4hXRgAicldXZpZFdy3GclJFIv5mapdlI0IiTisHL3JyS7gDSiojIDJCLi86bpNnblRHeFBCI73mUpRHb55EIv5mapdlI0IiTisHL3JCNGZDRiojIDJCLi86bpNnblRHeFBCIQFETPBCIv5mapdlI0IiTisHL3JyMDBjQiojIDJCLiUmcvNEIv5mapdlI0IiTisHL3JSV8cTQiojIDJCLi86bpNnblRHeFBCI4JXYoNEbhl6YuFmbpZEIv5mapdlI0IiTis7W0ICZyBlIsIiMzITNxADI4ETNwIjMwIjI0ICdyNkIsIyMxYDMyIDMyIiOiAHeFJCLiInZu8WZ53mctYXauVnL5RXZAxWZklmcu8Wa49WZ5FnI0ISYONkIsUWdyRnOiwmdFJCLigTM9UjMzYDNycTN9ITM6IiOiQWSiwSfdtlOicGbmJCLiIjdyIDMyIIOII');
 
 
 const HomeEns = (props) => {
@@ -32,8 +34,6 @@ const HomeEns = (props) => {
 
     const goModule = async(e) =>  {
         e.preventDefault();
-        console.log('yes');
-        console.log(idEnseignement);
         const options = {
             headers: {"content-type": "application/json"} 
         }
@@ -77,7 +77,6 @@ const HomeEns = (props) => {
         axios.post('api/ens/forma/mod',dataMod,options).then(async res=> {
 
             await setallmodulesName(res.data)
-            console.log(res.data);
 
         });
         //obtenir les noms des étudiants 
@@ -85,14 +84,11 @@ const HomeEns = (props) => {
 
             await setallEtuName(res.data);
             setcompteurEtudiant(res.data.length);
-            console.log(res.data);
 
         });
 
         axios.post('api/ens/forma',data,options).then(res=> {
-            const result = res.data.filter(v => v.idForma  === idForma);
-
-            console.log(result[0]);
+            const result = res.data.filter(v => v.idForma  === idForma);;
 
             const doc = new jsPDF();
             doc.setFontSize(10);
@@ -212,7 +208,6 @@ const HomeEns = (props) => {
 
             axios.post('api/ens/note/all',etudiant,options)
             .then(res=> {
-                //alert("Notes modifiée avec succés");
             });
         });
 
@@ -292,8 +287,7 @@ const HomeEns = (props) => {
                                     <tr class="grey lighten-2">
                                         <th>Identifiant</th>
                                         <th>TP</th>
-                                        <th>CC1</th>
-                                        <th>CC2</th>
+                                        <th>CC</th>
                                         <th>Exam</th>
                                         <th>Module</th>
                                         <th>Nom</th>
@@ -308,8 +302,7 @@ const HomeEns = (props) => {
                                         <tr className="ensg_tr" >
                                             <td>{val.idEnseignement}</td>
                                             <td>{val.coeffTP}</td>
-                                            <td>{val.coeffCC1}</td>
-                                            <td>{val.coeffCC2}</td>
+                                            <td>{val.coeffCC}</td>
                                             <td>{val.coeffExam}</td>
                                             <td>{val.nomModule}</td>
                                             <td>{val.nomEnseignement}</td>      

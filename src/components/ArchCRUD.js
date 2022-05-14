@@ -104,7 +104,7 @@ const ArchCRUD =() => {
                             {dataList.map((val)=> {
                                 return (
                                     <tr>
-                                    <td>{val.AnnéeUniv}</td>
+                                    <td>{val.AnneeUniv}</td>
                                     <td>{val.nomUniversite}</td>
                                     <td>{val.nomFac}</td>
                                     <td>{val.nomDepartement}</td>

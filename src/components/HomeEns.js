@@ -339,36 +339,12 @@ const HomeEns = (props) => {
                         <div class="card-content black-text  modif_note">
                             <i class="fas fa-times" onClick={closeModule}></i>
                             <h5>Notes des étudiant pour le module {moduleName} </h5>
-                            <table className="highlight">
-                            <thead>
-                                <tr class="">
-                                    <th>Nom et prénom </th>
-                                    <th>Note TP</th>
-                                    <th>Note CC</th>
-                                    <th>Note Exam</th>
-                                    <th>Session</th>
-                                    <th>Année Univ</th>
-                                </tr>
-                            </thead>
-                            {cuurentEnsignement.map((val)=> {
-                            return (
-                                <tr>
-                                    <td>{val.nomEtu} {val.prenomEtu}</td>
-                                    <td>{val.noteTP}</td>
-                                    <td>{val.noteCC}</td>
-                                    <td>{val.noteExam}</td>
-                                    <td>{val.session}</td>
-                                    <td>{val.AnnéeUniv}</td>
-                                 </tr>
-
-                            )})}
                            
                            
                             <Wj.FlexGrid 
                                     itemsSource={ resultatFinaleState }
                             />
                             
-                            </table>
                             <i class="fa-solid fa-circle-check" onClick={updateAllNotes}></i>
                                
                             

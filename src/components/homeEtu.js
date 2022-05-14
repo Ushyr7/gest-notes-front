@@ -54,8 +54,7 @@ const HomeEtu  = (props) => {
         { title: "Code", dataKey: "code" },
         { title: "Module", dataKey: "module" },
         { title: "Tp", dataKey: "tp" },
-        { title: "CC1", dataKey: "cc1" },
-        { title: "CC2", dataKey: "cc2" },
+        { title: "CC", dataKey: "cc" },
         { title: "Examen", dataKey: "examen" },
         { title: "Note", dataKey: "note" },
         { title: "Session 2", dataKey: "session2" },
@@ -63,7 +62,6 @@ const HomeEtu  = (props) => {
     ];
     var rows=[];
     
-    console.log(currentFormation)
     currentFormation.filter(formation=>(formation.session===1)).map((val)=> {
         var a=`${currentFormation.filter(formation=>(formation.session===2)).map((val2)=> {
             return(val2.idModule===val.idModule ? val2.noteExam:"")      
@@ -74,8 +72,7 @@ const HomeEtu  = (props) => {
             {code: val.idModule,
             module: val.nomModule, 
             tp: val.noteTP,
-            cc1: val.noteCC1, 
-            cc2: val.noteCC2,
+            cc: val.noteCC, 
             examen: val.noteExam,
             session2:  a.replace(","," "),
             note: "",
@@ -284,7 +281,7 @@ const HomeEtu  = (props) => {
                                 <tr>
                                     <th>Code</th>
                                     <th>Module</th>
-                                    <th colSpan={5}>Session 1</th>
+                                    <th colSpan={4}>Session 1</th>
                                     <th>Session 2</th>
                                     <th>Resultat</th>
                                 </tr>
@@ -292,11 +289,10 @@ const HomeEtu  = (props) => {
                                     <th></th>
                                     <th>{currentFormation.length > 0 && currentFormation[0].nomForma}</th>
                                     <th>TP</th>
-                                    <th>CC1</th>
-                                    <th>CC2</th>
+                                    <th>CC</th>
                                     <th>Exam</th>
-                                    <th>Note</th>
-                                    <th></th>
+                                    <th>Moyenne</th>
+				    <th>Note</th>
                                     <th></th>
                                 </tr>
                                 {console.log(currentFormation.filter(formation=>(formation.session===2)))}
@@ -307,8 +303,7 @@ const HomeEtu  = (props) => {
                                         <td>{val.idModule}</td>
                                         <td>{val.nomModule}</td>
                                         <td>{val.noteTP}</td>
-                                        <td>{val.noteCC1}</td>
-                                        <td>{val.noteCC2}</td>
+                                        <td>{val.noteCC}</td>
                                         <td>{val.noteExam}</td>
                                         <td></td>
                                         <td>
